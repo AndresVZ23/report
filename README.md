@@ -645,6 +645,8 @@ _(Captura del Product Backlog en la herramienta seleccionada.)_
 
 ## 4.1. Strategic-Level Attribute-Driven Design
 
+En este capítulo se presenta el razonamiento que guio las decisiones arquitectónicas de la solución, partiendo de un enfoque dirigido por atributos (Attribute-Driven Design) y articulándolo, en un segundo momento, con la descomposición estratégica propia del Domain-Driven Design. El objetivo fue llegar a una arquitectura que no solo responda a los requisitos funcionales del negocio —gestión inteligente de estacionamientos apoyada en un gemelo digital—, sino que además sea sostenible en el tiempo frente a cambios previsibles, en especial la incorporación futura de sensores físicos y nuevos centros comerciales.
+
 ### 4.1.1. Design Purpose
 
 _(Explicación del propósito del proceso de diseño, evidenciando relación con la problemática y orientación a satisfacer las necesidades de los segmentos objetivo y el negocio.)_
