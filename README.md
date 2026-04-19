@@ -694,19 +694,16 @@ Para esta sección seleccionamos aquellos cuya ejecución involucra varios compo
 
 #### 4.1.2.3. Constraints
 
-_(Restricciones impuestas por el cliente o el negocio, no negociables.)_
-
 | Technical Story ID | Título | Descripción | Criterios de Aceptación | Relacionado con (Epic ID) |
 |---|---|---|---|---|
-| CON-01 | Use of Azure Digital Twins | El gemelo digital debe construirse sobre Azure Digital Twins por requerimiento del modelo de negocio basado en transformación digital. | El sistema utiliza Azure Digital Twins como repositorio del grafo del gemelo digital. | — |
-| CON-02 | Low-code Mobile App | La aplicación móvil del conductor debe desarrollarse con tecnología low-code. | La app móvil se construye con Microsoft PowerApps. | — |
-| CON-03 | Web Services Framework | Los Web Services deben implementarse en ASP.NET Core con C#. | Todos los servicios REST se construyen con ASP.NET Core 8. | — |
-| CON-04 | Web Application Framework | La aplicación web del operador debe implementarse en Angular. | El dashboard del operador se construye con Angular y Angular Material o PrimeNG. | — |
-| CON-05 | Default Language English | El idioma por defecto en todos los productos digitales debe ser inglés (en_US), con soporte a español latinoamericano (es_419). | Todas las interfaces, mensajes y documentación API están en inglés por defecto. | — |
-| CON-06 | Cost Containment | El presupuesto operativo debe ajustarse a Azure for Students ($100 USD). | Se evita el uso de Event Grid e IoT Hub; el simulador alimenta ADT directamente vía SDK. | — |
-| CON-07 | RESTful API Style | Los Web Services deben seguir el estilo arquitectónico RESTful. | Endpoints diseñados con verbos HTTP semánticos y recursos como sustantivos. | — |
-| CON-08 | Documentation with OpenAPI | La documentación de APIs debe seguir OpenAPI Specification vía Swagger. | Cada endpoint cuenta con su especificación Swagger publicada. | — |
-| CON-09 | Source Control with GitFlow | El control de versiones aplica GitFlow y Conventional Commits. | Todos los repos siguen el branching model definido. | — |
+| CT01 | Uso obligatorio de Azure Digital Twins | La plataforma de gemelo digital debe implementarse sobre Azure Digital Twins, con modelado en DTDL. | **Dado** el modelo del estacionamiento, **cuando** se despliega, **entonces** reside en una instancia de Azure Digital Twins con todas las entidades definidas en DTDL 2.0. | EP01 |
+| CT02 | Aplicación móvil en tecnología low-code | La aplicación móvil para el conductor debe desarrollarse en MIT App Inventor, dada la orientación low-code del proyecto. | **Dado** el código fuente, **cuando** se revisa el repositorio, **entonces** el proyecto móvil está construido íntegramente en App Inventor y no depende de frameworks nativos adicionales. | EP02 |
+| CT03 | Simulación de sensores IoT | No se desplegará hardware IoT físico; los sensores se simulan mediante un servicio generador de eventos. | **Dado** el servicio de simulación, **cuando** se ejecuta, **entonces** produce eventos realistas de ocupación, humo, flujo vehicular y luminosidad con patrones horarios coherentes con un centro comercial. | EP03 |
+| CT04 | Tecnologías open-source donde sea posible | Los componentes backend y frontend deben preferir tecnologías open-source salvo en los puntos donde el curso exige servicios gestionados (ADT). | **Dado** el stack elegido, **cuando** se audita el repositorio, **entonces** backend (Spring Boot) y web (Angular) son open-source; los servicios gestionados se justifican explícitamente. | — |
+| CT05 | Internacionalización i18n | La experiencia del Landing Page y de la Web Application debe estar disponible en inglés (en_US) y español latinoamericano (es_419), con inglés como idioma por defecto. | **Dado** el navegador con preferencia en_US, **cuando** el usuario ingresa, **entonces** la interfaz se presenta en inglés. **Dado** la preferencia es_419, **cuando** el usuario ingresa, **entonces** la interfaz se presenta en español latinoamericano. | — |
+| CT06 | Accesibilidad a11y con atributos ARIA | Las interfaces web deben incluir atributos ARIA apropiados y cumplir con criterios WCAG 2.1 nivel AA en los componentes principales. | **Dado** un auditor de accesibilidad automático, **cuando** analiza las páginas principales, **entonces** no reporta errores críticos WCAG 2.1 AA. | — |
+| CT07 | Control de versiones con GitFlow | El código fuente debe gestionarse en GitHub bajo GitFlow y utilizando conventional commits. | **Dado** el repositorio, **cuando** se revisa su historial, **entonces** se evidencian ramas main, develop, feature/\*, release/\* y commits con prefijos convencionales (feat, fix, test, etc.). | — |
+| CT08 | Despliegue sobre infraestructura cloud | Los productos digitales deben desplegarse sobre un proveedor cloud (Azure, AWS o Google Cloud) con URLs públicas. | **Dado** la finalización del Sprint 1, **cuando** se revisa la evidencia de despliegue, **entonces** existe una URL pública para cada producto digital. | — |
 
 ### 4.1.3. Architectural Drivers Backlog
 
