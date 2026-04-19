@@ -643,17 +643,23 @@ _(Captura del Product Backlog en la herramienta seleccionada.)_
 
 # Capítulo IV: Strategic-Level Software Design
 
-## 4.1. Strategic-Level Attribute-Driven Design
-
 En este capítulo se presenta el razonamiento que guio las decisiones arquitectónicas de la solución, partiendo de un enfoque dirigido por atributos (Attribute-Driven Design) y articulándolo, en un segundo momento, con la descomposición estratégica propia del Domain-Driven Design. El objetivo fue llegar a una arquitectura que no solo responda a los requisitos funcionales del negocio —gestión inteligente de estacionamientos apoyada en un gemelo digital—, sino que además sea sostenible en el tiempo frente a cambios previsibles, en especial la incorporación futura de sensores físicos y nuevos centros comerciales.
 
-### 4.1.1. Design Purpose
+## 4.1. Strategic-Level Attribute-Driven Design
 
 El proceso de Attribute-Driven Design (ADD) fue aplicado siguiendo la propuesta metodológica de Cervantes y Kazman (2016), quienes plantean una serie de iteraciones donde los drivers arquitectónicos se traducen en decisiones concretas mediante la selección razonada de tácticas y patrones. En nuestro caso, trabajamos en varias sesiones internas de equipo, contrastando cada decisión con los escenarios de atributos de calidad que ya habíamos priorizado durante el Quality Attribute Workshop preliminar.
 
-El propósito del diseño arquitectónico de la plataforma es habilitar una solución que combine visibilidad operativa unificada para el operador del centro comercial con experiencias móviles ágiles para el conductor, sustentada por un gemelo digital como single source of truth del estado del estacionamiento. Las decisiones arquitectónicas buscan satisfacer simultáneamente requisitos de baja latencia para alertas de seguridad, alta modificabilidad para incorporar nuevos tipos de sensores en el futuro, y costo operativo controlado consistente con un modelo SaaS dirigido a centros comerciales medianos.
+### 4.1.1. Design Purpose
+
+El propósito de este proceso de diseño fue doble. Por un lado, queríamos traducir la problemática identificada, la ausencia de visibilidad integral sobre el estado operativo de los estacionamientos de centros comerciales, en una estructura arquitectónica que hiciera posible contextualizar espacialmente la información y soportar decisiones operativas coordinadas. Por otro lado, buscábamos dejar abierta la puerta a un despliegue progresivo: la solución debía funcionar inicialmente con sensores simulados y, en fases posteriores, admitir sensores físicos sin cambios disruptivos en el núcleo del sistema.
+
+Se entiende por gemelo digital, en el sentido propuesto por Grieves y Vickers (2017), a una representación virtual sincronizada de un sistema físico que permite analizar, simular y anticipar su comportamiento. En el presente proyecto, el gemelo digital no es un accesorio de visualización, sino el centro arquitectónico sobre el que gravitan el resto de decisiones. Esto condiciona, por ejemplo, la elección de plataforma (Azure Digital Twins), los patrones de integración entre servicios y la propia descomposición del dominio.
+
+Adicionalmente, el propósito del diseño contempla satisfacer dos segmentos objetivo con necesidades marcadamente distintas: el operador del estacionamiento, que requiere un tablero de operaciones 3D con información contextual en tiempo casi real, y el conductor, cuya experiencia transcurre en un dispositivo móvil con restricciones de consumo de datos y tiempos de respuesta muy acotados. Esta dualidad fue, de hecho, uno de los primeros factores que nos llevó a considerar una descomposición por bounded contexts.
 
 ### 4.1.2. Attribute-Driven Design Inputs
+
+Los inputs del proceso se organizaron en tres categorías: Primary Functionality expresada como user stories de alto impacto arquitectónico, Quality Attribute Scenarios y Constraints tanto técnicos como de negocio. A continuación se detalla cada uno.
 
 #### 4.1.2.1. Primary Functionality
 
