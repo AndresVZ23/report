@@ -7565,22 +7565,46 @@ _(Pasos para desplegar cada producto digital desde sus repositorios.)_
 | **Sprint 1 Velocity** | _(N story points)_ |
 | **Sum of Story Points** | _(N)_ |
 
+
 #### 7.2.1.2. Sprint Backlog 1
 
-**URL del Board:** `https://trello.com/b/...` _(o herramienta equivalente)_
+El Sprint Backlog del Sprint 1 consolida las historias de usuario y las historias técnicas seleccionadas durante el Sprint Planning, descompuestas en tasks ejecutables con responsable y estimación en horas. La duración del sprint fue de dos semanas calendario, del **lunes 19 de mayo de 2026 al viernes 30 de mayo de 2026**, con una capacidad total comprometida de **94 Story Points** distribuidos entre los cinco integrantes del equipo.
 
-![Sprint 1 Board](assets/images/chapter-07/sprint-1-board.png)
+El **Sprint Goal** acordado fue: *"Tener desplegado y demostrable, de punta a punta, el flujo núcleo de SmartPark: visita del Landing Page con planes Basic / Professional / Enterprise, registro y login de operador y de conductor, gemelo digital sincronizado en Azure Digital Twins desde el simulador IoT, dashboard 3D del operador con ocupación en tiempo real vía SignalR, alerta de humo geolocalizada con resaltado de zona en el modelo 3D, y mapa de disponibilidad en la app móvil del conductor con notificación push ante incidentes"*.
 
-| Sprint # | Sprint 1 | | | | | | |
-|---|---|---|---|---|---|---|---|
-| **User Story** | | | **Work-Item / Task** | | | | |
-| Id | Title | Id | Title | Description | Estimation (Hours) | Assigned To | Status |
-| US-07 | View Landing Page as Mall Operator | T-01 | Setup landing page repo | _(...)_ | 2 | _(Nombre)_ | Done |
-| US-07 | View Landing Page as Mall Operator | T-02 | Build hero section | _(...)_ | 4 | _(Nombre)_ | Done |
-| US-08 | View Landing Page as Driver | T-03 | Build "For Drivers" section | _(...)_ | 4 | _(Nombre)_ | Done |
-| TS-01 | Twin State Update Endpoint | T-04 | Setup ASP.NET Core project | _(...)_ | 3 | _(Nombre)_ | Done |
-| TS-01 | Twin State Update Endpoint | T-05 | Implement PATCH /api/v1/twins/{id} | _(...)_ | 6 | _(Nombre)_ | Done |
-| _(...)_ | | | | | | | |
+La siguiente tabla resume el alcance del Sprint Backlog 1 agrupado por área funcional:
+
+| Área | Historias incluidas | Story Points |
+|---|---|---|
+| Landing Page (operador y conductor) | US-01, US-02, US-03, US-04, US-06, US-08 | 16 |
+| Autenticación y gestión de identidad | US-11, US-12, US-13, US-14, TS-09 | 18 |
+| Dashboard del operador y gemelo digital 3D | US-16, US-35, US-19, TS-01, TS-02, TS-03 | 30 |
+| Aplicación móvil del conductor | US-18, US-27, US-32 | 15 |
+| Simulador IoT y sincronización con el twin | TS-10 | 11 |
+| Infraestructura, despliegue y CI/CD en Azure | (Constraint CT-09) | 4 |
+| **Total** | | **94** |
+
+A continuación se presentan las dos vistas del Sprint 1 Board que registran el detalle de cada task —identificador, descripción, estimación en horas, responsable y estado al cierre del sprint—:
+
+![Sprint 1 Board — Parte 1: tasks T-01 a T-16 (Landing, autenticación, simulador IoT, ACL Digital Twin)](images/sprint1_board_part1.png)
+*Figura 7.2. Sprint 1 Board — Parte 1: tasks asociadas al Landing Page, autenticación, sincronización del simulador IoT con Azure Digital Twins y ACL Digital Twin Synchronization.*
+
+![Sprint 1 Board — Parte 2: tasks T-17 a T-29 (Operador, conductor, FCM, despliegue Azure)](images/sprint1_board_part2.png)
+*Figura 7.3. Sprint 1 Board — Parte 2: tasks asociadas al dashboard del operador, visor 3D del gemelo, alerta de humo, mapa de disponibilidad del conductor, registro de ubicación, notificaciones push y aprovisionamiento Azure con CI/CD.*
+
+La distribución de carga entre los integrantes del equipo se resume en la siguiente tabla:
+
+| Integrante | Tasks asignadas | Horas estimadas | Estado dominante |
+|---|---|---|---|
+| Sánchez, Camila | T-01, T-02, T-03, T-04, T-05, T-06 | 21 h | Done |
+| Valle, Abel | T-07, T-08, T-18, T-19, T-20, T-23 | 27 h | Done (T-23 en To-Review) |
+| Riva, Elmer | T-09, T-10, T-15, T-16, T-17, T-21, T-26, T-29 | 43 h | Done (T-26 en To-Review) |
+| Qqueso, Britney | T-11, T-12, T-24, T-25, T-28 | 18 h | Done (T-28 en In-Process) |
+| Morales, Hernán | T-13, T-14, T-22, T-27 | 22 h | Done (T-27 en In-Process) |
+| **Total** | **29 tasks** | **131 h** | |
+
+Al cierre del Sprint 1, **25 de las 29 tasks (86%)** alcanzaron el estado *Done*; **2 tasks (T-23 Tarjeta de alerta en vivo y T-26 Registro de device tokens + despacho FCM)** quedaron en estado *To-Review* pendientes de revisión de pares; y **2 tasks (T-27 Notification Mgmt: identificar conductores afectados y T-28 Recepción del push en la app)** quedaron en estado *In-Process* por dependencias resueltas hacia el final del sprint. Las cuatro tasks no completadas se transfirieron al Sprint Backlog 2 (TF) con la prioridad correspondiente para no comprometer el cierre demostrable del flujo núcleo en la Sprint Review.
+
 
 #### 7.2.1.3. Development Evidence for Sprint Review
 
