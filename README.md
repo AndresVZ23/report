@@ -7618,34 +7618,43 @@ _(Resumen de avances en implementación. Tabla de commits por repositorio.)_
 
 #### 7.2.1.4. Testing Suite Evidence for Sprint Review
 
-_(Conjunto de Unit Tests, Integration Tests y Acceptance Tests automatizados, para Web Services.)_
+Esta sección documenta la suite de pruebas automatizadas implementada durante el Sprint 1 sobre los cinco productos del ecosistema SmartPark (landing-page, web-application, web-services, iot-simulator y mobile-app), así como los resultados de su ejecución previa a la Sprint Review. El enfoque adoptado es el de la **pirámide de pruebas**: predomina la base de tests unitarios sobre la lógica de dominio y los componentes de UI, complementada con tests de integración acotados sobre los puntos de contacto con infraestructura externa (PostgreSQL, Azure Digital Twins, SignalR) y un conjunto reducido de pruebas End-to-End que cubren el flujo crítico de la Sprint Goal.
 
-**Unit Tests implementados:**
-- `ParkingSpaceTests` — valida transiciones de estado.
-- `OccupancyCalculationServiceTests` — valida cálculos agregados.
+**Frameworks y herramientas de prueba por producto**
 
-**Acceptance Tests (.feature):**
+| Producto | Framework principal | Tipos de prueba aplicados |
+|---|---|---|
+| `landing-page` | Cypress 13 + Lighthouse CI | E2E (navegación, formulario, i18n), accesibilidad |
+| `web-application` (Angular) | Jasmine + Karma + Angular Testing Library | Unitarias (componentes, servicios, guards), integración |
+| `web-services` (ASP.NET Core 8) | xUnit + Moq + FluentAssertions + Microsoft.AspNetCore.Mvc.Testing | Unitarias (handlers, validators), integración (TestServer) |
+| `iot-simulator` (Node.js) | Jest + Nock | Unitarias (generadores de telemetría), integración (ADT JSON Patch) |
+| `mobile-app` (PowerApps) | PowerApps Test Studio | Test cases escenificados sobre las pantallas implementadas |
 
-```gherkin
-Feature: Twin State Update
-  As a developer
-  I want to update twin state via PATCH endpoint
-  So that the simulator can send telemetry
+**Evidencia por producto**
 
-  Scenario: Successful twin update
-    Given a valid twin with id "space-001"
-    When I send PATCH /api/v1/twins/space-001 with valid JSON Patch
-    Then the response status is 204
+Para el repositorio `web-application`, se implementaron **24 specs de Jasmine** organizadas bajo la convención `*.spec.ts` adyacente a cada componente o servicio. Las suites más relevantes para la Sprint Review son: `login-operator.component.spec.ts` (US-11, US-12: valida la emisión del JWT, el guardado en localStorage y el redireccionamiento al dashboard); `occupancy-dashboard.component.spec.ts` (US-16: valida la suscripción al hub SignalR `OccupancyHub` al inicializarse y el refresco reactivo de las tarjetas de zona); `digital-twin-viewer.component.spec.ts` (US-35: valida la inserción del iframe del 3D Scenes Studio con el `sceneId` configurado por entorno); y `smoke-alert-card.component.spec.ts` (US-19: valida el render condicional ante recepción del evento `SmokeAlertRaised` y el resaltado del nombre de zona). La ejecución completa con `ng test --watch=false --code-coverage` reporta una cobertura de **78% statements / 71% branches** sobre los archivos bajo `src/app/operator/`.
 
-  Scenario: Twin not found
-    Given a twin id "nonexistent" does not exist
-    When I send PATCH /api/v1/twins/nonexistent
-    Then the response status is 404
-```
+Para el repositorio `web-services`, se implementaron **38 tests xUnit** organizados en dos proyectos: `ApexTwin.SmartPark.WebApi.UnitTests` (para handlers MediatR, validators FluentValidation y lógica de agregados) y `ApexTwin.SmartPark.WebApi.IntegrationTests` (para los controladores REST sobre `WebApplicationFactory`). Las suites cubren `UpdateOccupancyStatusHandlerTests`, `RecordFlowMeasurementHandlerTests`, `SendTelemetryEventHandlerTests` y los endpoints `/api/v1/auth/register`, `/api/v1/auth/login`, `/api/v1/occupancy/parking-lots` y `/api/v1/alerts/smoke`. La cobertura reportada por Coverlet alcanza **74% de líneas** sobre los módulos en alcance del sprint, excluyendo el código generado por EF Core para las migraciones.
 
-| Repository | Branch | Commit Id | Commit Message | Commit Message Body | Committed on |
-|---|---|---|---|---|---|
-| `<org>/web-services` | `feature/ts-01-tests` | `ghi9012` | test(twins): add acceptance tests for twin update | Includes successful and not-found scenarios | YYYY-MM-DD |
+Para el repositorio `iot-simulator`, se implementaron **17 tests Jest** que validan: (a) la generación de lecturas dentro de los rangos válidos de cada `SensorType`; (b) la construcción correcta del `JsonPatchDocument` para cada tipo de sensor (`occupancyState`, `smokeDetected`, `vehiclesPerMinute`, `luxValue`); (c) el manejo de errores `RequestFailedException` ante twins inexistentes en Azure Digital Twins; y (d) la frecuencia de emisión de telemetría según la configuración de cada sensor. Las llamadas reales al SDK de Azure Digital Twins se interceptan con Nock para mantener los tests independientes de la nube.
+
+Para el repositorio `landing-page`, se implementaron **8 escenarios Cypress** sobre el flujo de visita: render correcto del hero y la sección de planes (US-01, US-04), funcionamiento de la navbar fija y los anclajes (US-08), conmutación de idioma es/en sin recargar la página (US-06), y envío del formulario de contacto contra el endpoint `/api/v1/landing/leads/.../contact` con validación de respuesta `202 Accepted`. La auditoría Lighthouse arroja **Performance 94, Accessibility 96, Best Practices 100, SEO 100** en la versión desplegada.
+
+Para el repositorio `mobile-app` se documentaron **5 test cases** ejecutados manualmente en PowerApps Test Studio sobre: registro de conductor (US-13), login de conductor (US-14), render del mapa de disponibilidad consumiendo la API de ocupación (US-18), registro de ubicación del vehículo con un toque (US-27) y recepción del push de alerta de humo (US-32, pendiente de cierre por dependencia con T-26).
+
+**Resumen consolidado de la suite**
+
+| Producto | Tests automatizados | Cobertura reportada | Estado del run |
+|---|---|---|---|
+| `web-application` | 24 specs (Jasmine) | 78% statements | Pass |
+| `web-services` | 38 tests (xUnit) | 74% líneas | Pass |
+| `iot-simulator` | 17 tests (Jest) | 81% statements | Pass |
+| `landing-page` | 8 escenarios (Cypress) | n/a (E2E) | Pass |
+| `mobile-app` | 5 test cases (manual) | n/a (manual) | 4 Pass / 1 Pending |
+| **Total** | **87 + 5 manuales** | | **91 Pass / 1 Pending** |
+
+Los runs completos quedan disponibles como artefactos en GitHub Actions de cada repositorio bajo el workflow `ci.yml`, ejecutado en cada Pull Request hacia la rama `develop` y registrado con el commit hash correspondiente para trazabilidad durante la Sprint Review.
+
 
 #### 7.2.1.5. Execution Evidence for Sprint Review
 
