@@ -7586,10 +7586,10 @@ La siguiente tabla resume el alcance del Sprint Backlog 1 agrupado por área fun
 
 A continuación se presentan las dos vistas del Sprint 1 Board que registran el detalle de cada task —identificador, descripción, estimación en horas, responsable y estado al cierre del sprint—:
 
-![Sprint 1 Board — Parte 1: tasks T-01 a T-16 (Landing, autenticación, simulador IoT, ACL Digital Twin)](images/sprint1_board_part1.png)
+![Sprint 1 Board — Parte 1: tasks T-01 a T-16 (Landing, autenticación, simulador IoT, ACL Digital Twin)](assets/images/chapter-07/sprint1_board_part1.jpeg)
 *Figura 7.2. Sprint 1 Board — Parte 1: tasks asociadas al Landing Page, autenticación, sincronización del simulador IoT con Azure Digital Twins y ACL Digital Twin Synchronization.*
 
-![Sprint 1 Board — Parte 2: tasks T-17 a T-29 (Operador, conductor, FCM, despliegue Azure)](images/sprint1_board_part2.png)
+![Sprint 1 Board — Parte 2: tasks T-17 a T-29 (Operador, conductor, FCM, despliegue Azure)](assets/images/chapter-07/sprint1_board_part2.png)
 *Figura 7.3. Sprint 1 Board — Parte 2: tasks asociadas al dashboard del operador, visor 3D del gemelo, alerta de humo, mapa de disponibilidad del conductor, registro de ubicación, notificaciones push y aprovisionamiento Azure con CI/CD.*
 
 La distribución de carga entre los integrantes del equipo se resume en la siguiente tabla:
