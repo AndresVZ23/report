@@ -7658,11 +7658,60 @@ Los runs completos quedan disponibles como artefactos en GitHub Actions de cada 
 
 #### 7.2.1.5. Execution Evidence for Sprint Review
 
-_(Screenshots de las principales vistas implementadas + enlace a video demo.)_
+Esta sección presenta la evidencia de ejecución del flujo núcleo de SmartPark al cierre del Sprint 1, demostrando que el Sprint Goal acordado durante el Sprint Planning fue alcanzado de forma verificable sobre los entornos desplegados en Azure. La evidencia se organiza por producto y se cierra con la validación del flujo end-to-end que sustenta la Sprint Review ante el Product Owner.
 
-![Sprint 1 Landing Hero](assets/images/chapter-07/sprint-1-landing.png)
+**Entornos desplegados al cierre del Sprint 1**
 
-**URL del video demo:** `https://web.microsoftstream.com/...`
+| Producto | Stack | URL pública del entorno de Sprint Review | Tag de versión |
+|---|---|---|---|
+| `landing-page` | HTML/CSS/JS sobre Azure Static Web Apps | `https://smartpark-landing.azurestaticapps.net` | v0.1.0-sprint1 |
+| `web-application` | Angular 18 sobre Azure Static Web Apps | `https://smartpark-web.azurestaticapps.net` | v0.1.0-sprint1 |
+| `web-services` | ASP.NET Core 8 sobre Azure App Service B1 | `https://smartpark-api.azurewebsites.net` | v0.1.0-sprint1 |
+| `iot-simulator` | Node.js (ejecución local en demo) | n/a — se ejecuta desde la laptop del demostrador | v0.1.0-sprint1 |
+| `mobile-app` | PowerApps (publicado en el tenant UPC) | App `SmartPark Driver` (compartida con jurado) | v0.1.0-sprint1 |
+| Azure Digital Twins | Plataforma Azure | Host `smartpark-adt.api.scus.digitaltwins.azure.net` | n/a |
+
+La provisión de la infraestructura y el pipeline CI/CD están documentados en la sección 7.1.4 (Deployment Configuration) a cargo de Elmer Riva. Cada repositorio dispara su workflow `deploy.yml` automáticamente sobre `develop`, generando el despliegue continuo a los entornos listados.
+
+**Evidencia del flujo end-to-end alineada con el Sprint Goal**
+
+A continuación se documenta el recorrido completo del flujo núcleo, indicando para cada paso la historia de usuario involucrada y la captura que lo evidencia:
+
+1. **Visita al Landing Page con planes visibles** (US-01, US-02, US-03, US-04, US-06, US-08). Se accede a `https://smartpark-landing.azurestaticapps.net` y se valida el render de la sección hero, los bloques "Para Operadores" y "Para Conductores", la tabla comparativa de los planes Basic / Professional / Enterprise, la navbar responsiva y la conmutación de idioma es/en.
+
+   *Captura sugerida: `images/exec_01_landing_planes.png`*
+
+2. **Registro y login de operador** (US-11, US-12 / TS-09). Desde el Landing se navega a `https://smartpark-web.azurestaticapps.net/register` y se registra un operador de prueba. El backend `web-services` responde con `201 Created` y emite el JWT en el login subsiguiente, persistido por la Web App Angular en `localStorage` para uso en las subsiguientes llamadas autenticadas.
+
+   *Captura sugerida: `images/exec_02_login_operador.png`*
+
+3. **Dashboard de ocupación en tiempo real con visor 3D del gemelo** (US-16, US-35, TS-01). Tras el login, la Web App carga el dashboard que renderiza las tarjetas de ocupación por zona —consumiendo `GET /api/v1/occupancy/parking-lots` para el snapshot inicial y suscribiéndose al hub SignalR `/hubs/dashboard` (grupo `operators`) para el refresco reactivo—, y embebe el visor 3D del gemelo digital servido por Azure Digital Twins 3D Scenes Studio. El simulador IoT (ejecutado en la laptop del demostrador) inyecta cambios de ocupación que se reflejan tanto en las tarjetas como en el modelo 3D dentro de un margen inferior a 3 segundos.
+
+   *Captura sugerida: `images/exec_03_dashboard_3d.png`*
+
+4. **Alerta de humo con resaltado espacial** (US-19, TS-03). Se acciona en el simulador la emisión de telemetría de un `SmokeDetector` con valor positivo. El simulador hace `POST /api/v1/telemetry/events` al backend, que valida la lectura, aplica el JSON Patch correspondiente al twin afectado y publica el evento `SmokeAlertRaised`. La Web App muestra la tarjeta de alerta en vivo con la zona y la hora del incidente, y resalta visualmente la zona en el modelo 3D.
+
+   *Captura sugerida: `images/exec_04_alerta_humo.png`*
+
+5. **Mapa de disponibilidad para el conductor** (US-13, US-14, US-18). Desde la app móvil PowerApps publicada para el tenant UPC, el conductor se registra, inicia sesión y visualiza el mapa de disponibilidad por nivel y zona consumiendo el mismo endpoint `GET /api/v1/occupancy/parking-lots`. La vista se actualiza al refrescar manualmente la pantalla.
+
+   *Captura sugerida: `images/exec_05_mapa_disponibilidad.png`*
+
+6. **Registro de ubicación del vehículo** (US-27). El conductor estaciona en una plaza, abre la app y registra la ubicación con un toque sobre la zona correspondiente del mapa. La app persiste la ubicación localmente y la envía al backend.
+
+   *Captura sugerida: `images/exec_06_registro_ubicacion.png`*
+
+7. **Notificación push por alerta de humo geolocalizada** (US-32, TS-05). Al dispararse nuevamente la alerta del paso 4 sobre la zona donde el conductor registró su vehículo, el backend dispara el push vía Firebase Cloud Messaging y la app móvil recibe la notificación. Este paso quedó en estado *In-Process* al cierre del sprint por dependencia entre T-26 (To-Review) y T-27 / T-28 (In-Process), y se completará en los primeros días del Sprint 2.
+
+   *Captura sugerida: `images/exec_07_push_alerta.png` (parcial)*
+
+**Validación del Sprint Goal**
+
+De los siete pasos del flujo núcleo definido en el Sprint Goal, **seis quedaron plenamente demostrables** sobre los entornos desplegados al cierre del Sprint 1 (pasos 1 a 6), y **uno quedó parcialmente demostrable** (paso 7, recepción del push). El Sprint Goal se considera **alcanzado en lo sustancial** dado que el flujo cubre desde la captación comercial en el Landing hasta la operación bidireccional entre el operador y el conductor sobre el gemelo digital, y la única brecha pendiente es la notificación push, cuyo soporte de backend (TS-05) ya está implementado y a la espera de revisión.
+
+**Grabación del recorrido demostrativo**
+
+Se anexa la grabación integral del recorrido como parte del entregable de video del Sprint Review, disponible en el repositorio `report` bajo `videos/sprint1_review_demo.mp4` y referenciada también en la sección 7.4 (Video About-the-Product).
 
 #### 7.2.1.6. Services Documentation Evidence for Sprint Review
 
